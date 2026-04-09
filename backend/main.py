@@ -9,6 +9,7 @@ import uuid
 from safety_filter import SafetyFilter
 from emotion_detector import EmotionDetector
 from llm_service import MockLLMService
+from cognitive_analyzer import CognitiveAnalyzer
 
 app = FastAPI(title="MINDFUL AI API")
 
@@ -24,6 +25,7 @@ app.add_middleware(
 # Initialize modules
 safety_filter = SafetyFilter()
 emotion_detector = EmotionDetector()
+cognitive_analyzer = CognitiveAnalyzer()
 llm_service = MockLLMService()
 
 # In-memory session store for POC
@@ -82,12 +84,17 @@ async def chat_endpoint(req: ChatRequest):
             mode=session["mode"]
         )
         
-    # 3. Emotion Detection
+    # 3. Emotion & Cognitive Analysis
     emotion = emotion_detector.analyze(user_message)
+    distortions = cognitive_analyzer.analyze(user_message)
     
-    # Update gravity based on emotion
-    gravity_impact = emotion_detector.get_gravity_impact(emotion)
-    session["gravity"] = max(0.1, min(1.0, session["gravity"] + gravity_impact))
+    # Update gravity based on emotion and cognitive load
+    emotion_gravity = emotion_detector.get_gravity_impact(emotion)
+    cognitive_gravity = cognitive_analyzer.get_cognitive_load(distortions)
+    
+    # Heuristic: combine impacts (with slightly more weight on cognitive distortions for CBT)
+    total_impact = emotion_gravity + (cognitive_gravity * 0.5)
+    session["gravity"] = max(0.1, min(1.0, session["gravity"] + total_impact))
     
     # 4. Generate Response & Update State
     # Passing gravity and mode to LLM service
@@ -95,6 +102,7 @@ async def chat_endpoint(req: ChatRequest):
         user_message, 
         current_state, 
         emotion, 
+        distortions,
         mode=session["mode"],
         current_gravity=session["gravity"]
     )
