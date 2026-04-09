@@ -1,0 +1,292 @@
+:root {
+    --bg-main: #0B1120;
+    --bg-chat: #1E293B;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --accent-teal: #14B8A6;
+    --accent-teal-glow: rgba(20, 184, 166, 0.2);
+    --bot-bubble: rgba(30, 41, 59, 0.8);
+    --user-bubble: #14B8A6;
+    --border-subtle: rgba(255, 255, 255, 0.05);
+    
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: background 1.5s ease;
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(20, 184, 166, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.08), transparent 25%);
+}
+
+/* Gravity States */
+body.gravity-stable { background-color: #0B1120; }
+body.gravity-heavy { background-color: #050814; }
+body.gravity-freefall { background-color: #0f0505; }
+
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    height: 95vh;
+    max-height: 900px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.8);
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(15, 23, 42, 0.6);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.mode-toggle {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+}
+
+.mode-toggle button {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mode-toggle button.active {
+    background: var(--accent-teal);
+    color: white;
+    box-shadow: 0 2px 8px var(--accent-teal-glow);
+}
+
+.visualizer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#orbitCanvas {
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
+}
+
+.gravity-label {
+    position: absolute;
+    top: 85px;
+    right: 24px;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+    z-index: 5;
+    scrollbar-width: none;
+}
+
+.chat-container::-webkit-scrollbar { display: none; }
+
+.message {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+    animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.bubble {
+    padding: 16px 20px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    position: relative;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.system-message .bubble {
+    background: rgba(30, 41, 59, 0.6);
+    border-top-left-radius: 4px;
+}
+
+.user-message .bubble {
+    background: linear-gradient(135deg, var(--accent-teal), #0891B2);
+    border-top-right-radius: 4px;
+    color: #fff;
+}
+
+.distortion-highlight {
+    background: rgba(239, 68, 68, 0.2);
+    border-bottom: 2px dashed #EF4444;
+    cursor: help;
+}
+
+.meta-badges {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    top: -35px;
+    right: 24px;
+}
+
+.emotion-badge, .distortion-badge {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border-subtle);
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--accent-teal);
+    backdrop-filter: blur(10px);
+}
+
+.distortion-badge {
+    color: #F87171;
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+.input-area {
+    padding: 24px;
+    background: rgba(15, 23, 42, 0.5);
+    border-top: 1px solid var(--border-subtle);
+    position: relative;
+    z-index: 10;
+}
+
+#chatForm {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px 10px 10px 24px;
+    border-radius: 30px;
+}
+
+#chatForm:focus-within {
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 0 2px var(--accent-teal-glow);
+}
+
+#messageInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+#messageInput::placeholder {
+    color: var(--text-secondary);
+}
+
+#sendBtn {
+    background: var(--accent-teal);
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#sendBtn:hover {
+    transform: scale(1.05);
+    background: #0ea5e9;
+}
+
+.disclaimer {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 12px;
+    opacity: 0.7;
+}
+
+.typing-indicator {
+    padding: 0 24px 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.typing-indicator span {
+    animation: blink 1.4s infinite both;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink {
+    0% { opacity: 0.2; }
+    20% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+.emotion-badge {
+    position: absolute;
+    top: -30px;
+    right: 24px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid var(--border-subtle);
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    color: var(--accent-teal);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease;
+}

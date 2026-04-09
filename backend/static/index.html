@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINDFUL AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.5C17.2467 21.5 21.5 17.2467 21.5 12C21.5 6.75329 17.2467 2.5 12 2.5C6.75329 2.5 2.5 6.75329 2.5 12C2.5 17.2467 6.75329 21.5 12 21.5Z" stroke="#48CFCB" stroke-width="2"/>
+                    <path d="M12 16.5C14.4853 16.5 16.5 14.4853 16.5 12C16.5 9.51472 14.4853 7.5 12 7.5C9.51472 7.5 7.5 9.51472 7.5 12C7.5 14.4853 9.51472 16.5 12 16.5Z" stroke="#48CFCB" stroke-width="2" stroke-dasharray="2 2"/>
+                </svg>
+                <h1>MINDFUL AI</h1>
+            </div>
+            <div class="header-right">
+                <div class="mode-toggle" id="modeToggle">
+                    <button class="active" data-mode="THERAPIST">Therapist</button>
+                    <button data-mode="REFLECTOR">Reflector</button>
+                </div>
+                <div class="status">
+                    <span class="status-dot"></span> Online
+                </div>
+            </div>
+        </header>
+
+        <div class="visualizer-overlay">
+            <canvas id="orbitCanvas"></canvas>
+            <div class="gravity-label" id="gravityLabel">Gravity: Stable</div>
+        </div>
+
+        <main class="chat-container" id="chatContainer">
+            <div class="message system-message initial">
+                <div class="avatar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="bubble">
+                    Hello. I'm here to listen and support you. How are you feeling today?
+                </div>
+            </div>
+            <!-- Messages will be injected here -->
+        </main>
+
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            MINDFUL AI is typing<span>.</span><span>.</span><span>.</span>
+        </div>
+
+        <footer class="input-area">
+            <div class="meta-badges">
+                <div class="emotion-badge" id="emotionBadge" style="display: none;"></div>
+                <div class="distortion-badge" id="distortionBadge" style="display: none;"></div>
+            </div>
+            <form id="chatForm">
+                <input type="text" id="messageInput" placeholder="Type your message here..." autocomplete="off">
+                <button type="submit" id="sendBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </form>
+            <div class="disclaimer">
+                This is an AI companion for emotional support, not a clinical professional. If you are in immediate danger, please call emergency services.
+            </div>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
